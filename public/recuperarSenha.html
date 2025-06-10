@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recuperar Senha - Adopet</title>
+    <link rel="stylesheet" href="./assets/css/normalize.css">
+    <link rel="stylesheet" href="./assets/css/style.css">
+    <link rel="stylesheet" href="./assets/css/recuperarSenha.css">
+</head>
+<body class="recuperar-senha">
+    <div id="acessibilidade"></div>
+    <!-- cabecalho -->
+    <header>
+        <!-- formas do background -->
+        <div class="forma__topo"></div>
+        <div class="forma__lateral esquerda"></div>
+        <div class="patas"></div>
+        <!-- menu -->
+        <nav class="cabecalho container__cabecalho">
+            <ul class="cabecalho__menu" id="logado">
+                <li class="cabecalho__menu--item menu--logo" id="logo"></li>
+                <li class="cabecalho__menu--item"></li>
+                <li class="cabecalho__menu--item"></li>
+                <li class="cabecalho__menu--item"></li>
+                <li class="cabecalho__menu--item" id="perfil"></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <main class="conteudo">
+        <!-- paragrafo inicial -->
+        <section class="cadastro__texto container__cadastro">
+            <div class="cadastro__logo">
+                <img src="assets/img/Truepet-removebg-preview.png.jpeg alt=" Logo TruePet style="max-width: 300px; height: auto;">
+            </div>
+            <p class="recuperar-senha__texto">Esqueceu sua senha? Não se preocupe!</p>
+            <p class="recuperar-senha__texto">Siga os passos para criar uma nova senha.</p>
+            <!-- Área de Mensagem Geral -->
+            <div id="mensagemGeralRecuperacao" class="input-mensagem-erro" style="text-align: center; margin-top: 10px;"></div>
+        </section>
+        
+        <!-- formulario para recuperação de senha -->
+        <section>
+         <form data-formRecuperarSenha class="recuperar-senha__formulario container__cadastro">
+                <!-- Fase 1: Solicitar Código -->
+                <div id="fase1Recuperacao">
+                    <div class="input-container">
+                        <label for="email" class="formulario__loggedout--campo">Email</label>
+                        <input type="email" data-type="email" pattern="^[a-z0-9.]+@[a-z0-9]+\.[a-z]+(\.[a-z]+)?$" class="formulario__loggedout--input input" id="email" name="email" placeholder="Insira seu email cadastrado" required>
+                        <span class="input-mensagem-erro">Campo inválido</span>
+                    </div>
+                    <button type="button" id="btnEnviarCodigo" class="formulario__loggedout--botao btn">Enviar Código</button>
+                </div>
+
+                <!-- Fase 2: Inserir Código e Nova Senha (Oculto por padrão) -->
+                <div id="fase2Recuperacao" style="display: none;">
+                    <div class="input-container">
+                        <label for="codigoVerificacao" class="formulario__loggedout--campo">Código de Verificação</label>
+                        <input type="text" data-type="codigo" class="formulario__loggedout--input input" id="codigoVerificacao" name="codigoVerificacao" placeholder="Insira o código recebido" required>
+                        <span class="input-mensagem-erro">Campo inválido</span>
+                    </div>
+                    <div class="input-container">
+                        <label for="novaSenha" class="formulario__loggedout--campo">Nova Senha</label>
+                        <input type="password" data-type="senha" class="formulario__loggedout--input input" id="novaSenha" name="novaSenha" placeholder="Digite sua nova senha" required>
+                        <span class="input-mensagem-erro">Campo inválido</span>
+                    </div>
+                    <div class="input-container">
+                        <label for="confirmaNovaSenha" class="formulario__loggedout--campo">Confirmar Nova Senha</label>
+                        <input type="password" data-type="senha" class="formulario__loggedout--input input" id="confirmaNovaSenha" name="confirmaNovaSenha" placeholder="Confirme sua nova senha" required>
+                        <span class="input-mensagem-erro">Campo inválido</span>
+                    </div>
+                    <button type="submit" id="btnRedefinirSenha" class="formulario__loggedout--botao btn">Redefinir Senha</button>
+                </div>
+                
+            <a href="login.html" class="recuperar-senha__voltar">Voltar para o login</a>
+         </form>
+        </section>
+    </main> 
+    <footer class="rodape">
+        <!-- rodape -->
+        <p>2025 - Desenvolvido por acadêmicos do curso de Análise e Desenvolvimento de Sistemas.</p>
+    </footer>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<!-- O script public/js/Usuario/recuperarSenha.js será ajustado na próxima etapa -->
+<script type="module" src="./js/Usuario/recuperarSenha.js"></script>
+<script src="./app.js" type="module"></script>
+<script src="https://accessibility-widget.pages.dev/script.js" defer></script>
+</body>
+</html>

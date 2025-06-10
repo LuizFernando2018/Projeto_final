@@ -1,0 +1,30 @@
+.formulario__loggedout--botao {
+    border: none;
+    width: 100%; /* Define a largura como 100% do container pai */
+    box-sizing: border-box; /* Garante que padding e border não aumentem a largura total */
+    margin-top: 1.5rem; /* Ajusta margem superior */
+    margin-bottom: 1.5rem; /* Ajusta margem inferior */
+    margin-left: 0; /* Remove margens laterais específicas */
+    margin-right: 0; /* Remove margens laterais específicas */
+    padding: 0.75rem 1rem; /* Ajusta padding interno se necessário */
+}
+
+/* Remove as regras de margem específicas para diferentes tamanhos de tela */
+/*
+@media screen and (min-width: 0px) {
+    .formulario__loggedout--botao {
+        margin: 1.5rem 3rem 1.5rem 3rem;
+    }
+}
+
+@media screen and (min-width: 768px) {
+    .formulario__loggedout--botao   {
+        margin: 2.5rem 9rem 1.5rem 9rem;
+    }
+}
+@media screen and (min-width: 1280px) {
+    .formulario__loggedout--botao   {
+        margin: 2rem 10.5rem 1.5rem 10.5rem;
+    }
+}
+*/

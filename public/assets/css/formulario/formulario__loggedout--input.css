@@ -1,0 +1,31 @@
+.formulario__loggedout--input {
+    background-color: var(--cinza-claro);
+    text-align: center;
+    width: 100%; /* Define a largura como 100% do container pai */
+    box-sizing: border-box; /* Garante que padding e border não aumentem a largura total */
+    margin-left: 0; /* Remove margens laterais específicas */
+    margin-right: 0; /* Remove margens laterais específicas */
+}
+
+/* Remove a regra específica que causava diferença de largura para senhas em telas grandes */
+/* 
+@media screen and (min-width: 1280px) {
+    .formulario__loggedout--input#senha,.formulario__loggedout--input#confirmaSenha{
+        margin: .5rem 8rem;
+    }
+}
+*/
+
+@media screen and (min-width: 0px) {
+    .formulario__loggedout--input{
+        font-size: 12px;
+        margin-top: 0.5rem; /* Ajusta margem superior se necessário */
+        margin-bottom: 0.5rem; /* Ajusta margem inferior se necessário */
+    }
+}
+
+@media screen and (min-width: 768px) {
+    .formulario__loggedout--input  {
+        font-size: 16px;
+    }
+}

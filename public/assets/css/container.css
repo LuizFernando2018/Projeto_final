@@ -1,0 +1,43 @@
+.container {
+    z-index: 2;
+    padding-left: 1rem; /* Adiciona padding em vez de margem para controle interno */
+    padding-right: 1rem; /* Adiciona padding em vez de margem para controle interno */
+    margin-left: auto; /* Centraliza o container */
+    margin-right: auto; /* Centraliza o container */
+    max-width: 1200px; /* Define uma largura máxima para o conteúdo principal */
+}
+
+.container__cabecalho {
+    /* Mantém margens específicas para o cabeçalho se necessário, ou usa padding */
+    padding-left: 1rem;
+    padding-right: 1rem;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 1200px; 
+}
+
+.container__cadastro {
+    width: 100%; /* Ocupa a largura total disponível */
+    max-width: 500px; /* Define uma largura máxima para o formulário */
+    margin-left: auto; /* Centraliza o formulário */
+    margin-right: auto; /* Centraliza o formulário */
+    padding-left: 1rem; /* Espaçamento interno */
+    padding-right: 1rem; /* Espaçamento interno */
+    box-sizing: border-box; /* Inclui padding na largura total */
+}
+
+/* Media queries ajustadas - regras vazias removidas */
+
+@media screen and (min-width: 768px) {
+    .container__cadastro--texto {
+        /* Ajusta margens do texto se necessário, mas evita valores muito grandes */
+        /* Exemplo: margin: 0 2rem; */
+        max-width: 600px; /* Limita largura do texto */
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+
+/* As media queries para 0px e 1280px foram removidas pois estavam vazias ou 
+   as regras gerais já cobrem o necessário. Adicione-as de volta se precisar 
+   de estilos específicos para esses breakpoints. */

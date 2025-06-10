@@ -1,0 +1,29 @@
+.inicio__botao--item {
+    text-align: center;
+    box-shadow: 2px 5px 10px rgba(0, 0, 0, 0.3);
+    background-color: #4A90E2;
+    color: white;
+}
+.inicio__botao--item:hover {
+  background-color: #3367d6;
+}
+@media screen and (min-width: 0px) {
+    .inicio__botao--item{
+        margin: 0 2.5rem;
+        margin-bottom: 1rem;
+    }
+}
+
+@media screen and (min-width: 0px) {
+    .inicio__botao--item{
+        margin: 0 3.5rem;
+        margin-bottom: 1rem;
+    }
+}
+
+@media screen and (min-width: 1280px) {
+    .inicio__botao--item{
+        margin: 0 23.5rem;
+        margin-bottom: 1rem;
+    }
+}

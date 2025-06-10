@@ -1,0 +1,41 @@
+.cadastro {
+    background: white; /* Fundo branco */
+    text-align: center;
+
+    .cadastro__texto {
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* Centraliza o conteúdo horizontalmente */
+        justify-content: center;
+        text-align: center; /* Alinha o texto ao centro */
+    }
+    
+    .cadastro__logo {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: row; /* Alinha o conteúdo na horizontal (lado a lado) */
+        margin-bottom: 10px; /* Adiciona espaço entre o logo e o parágrafo */
+    }
+    
+    .inicio__logo-texto {
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: rgb(32, 130, 243); /* Cor azul para o texto (Tom de azul escuro) */
+        margin-right: 8px; /* Espaçamento entre o texto e a patinha */
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    }
+    
+    .inicio__logo-patinha {
+        font-size: 2.5rem; /* Tamanho da patinha */
+        color: rgb(32, 130, 243); /* Cor azul para a patinha */
+         text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    }
+    
+    .cadastro__texto--paragrafo {
+        font-size: 1rem;
+        color: rgb(32, 130, 243); /* Cor azul para o texto */
+        margin-bottom: 5px; /* Ajusta o espaço entre os parágrafos */
+        margin-top: -20px;
+    }
+}

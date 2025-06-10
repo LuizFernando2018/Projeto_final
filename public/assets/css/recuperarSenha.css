@@ -1,0 +1,72 @@
+.recuperar-senha {
+    background:white; 
+    text-align: center;
+
+    .cadastro__texto {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+    }
+    
+    .cadastro__logo {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: row;
+        margin-bottom: 20px;
+    }
+    
+    .inicio__logo-texto {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #1E3A8A;
+        margin-right: 8px;
+    }
+    
+    .inicio__logo-patinha {
+        font-size: 2rem;
+        color: #1E3A8A;
+    }
+    
+    .recuperar-senha__texto {
+        font-size: 1rem;
+        color:rgb(32, 130, 243);
+        margin-bottom: 5px;
+        margin-top: 0px;
+    }
+    
+    .recuperar-senha__formulario {
+        max-width: 500px;
+        margin: 0 auto;
+        font-family: var(--Poppins);
+    }
+
+}
+    
+    .recuperar-senha__voltar {
+        color: var(--azul);
+        text-decoration: none;
+        font-size: 14px;
+        display: block;
+        margin-top: -10px;
+    }
+    
+    .recuperar-senha__voltar:hover {
+        text-decoration: underline;
+    }
+    .recuperar-senha button {
+    background-color: #4285f4;
+    color: white;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+    .recuperar-senha button:hover {
+    background-color: #3367d6;
+
+
+}
