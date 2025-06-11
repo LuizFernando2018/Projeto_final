@@ -89,18 +89,3 @@ html {
     padding-bottom: 50px; /* Provides space for the fixed footer (approx 30px height + some buffer) */
 }
 
-/* Profile page specific button styling corrections */
-
-/* Ensure Logout button text is white */
-#logoutBtn {
-  color: var(--branco) !important; /* Force white text if overridden elsewhere */
-}
-
-/* Style 2FA button background to blue, preserve other .button styles */
-/* This assumes .button class or browser defaults provide the desired text color and padding */
-#enableTwoFactorBtn {
-  background-color: var(--azul);
-  border: none; /* Consistent with .formulario__botao */
-  /* Text color and padding are intended to be inherited or browser default for 'button' class */
-  /* If #enableTwoFactorBtn needs specific padding/font-size different from .btn, it would be set here or in .button */
-}
