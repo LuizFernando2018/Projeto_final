@@ -15,19 +15,48 @@
 </div>
 
 <script>
-    // Cria dinamicamente o script do VLibras
-    const scriptVLibras = document.createElement('script');
-    scriptVLibras.src = 'https://vlibras.gov.br/app/vlibras-plugin.js';
-    scriptVLibras.onload = () => {
-        const vlibras = new window.VLibras.Widget('https://vlibras.gov.br/app');
+    // Check if the VLibras plugin script has already been added
+    if (!document.getElementById('vlibras-plugin-script')) {
+        // Cria dinamicamente o script do VLibras
+        const scriptVLibras = document.createElement('script');
+        scriptVLibras.id = 'vlibras-plugin-script'; // Add an ID to the script tag
+        scriptVLibras.src = 'https://vlibras.gov.br/app/vlibras-plugin.js';
+        scriptVLibras.async = true; // Good practice for external scripts
 
-        const btn = document.querySelector('.vw-access-button');
-        if (btn) {
-            btn.addEventListener('mouseover', function () {
-                this.click();
-            });
-        }
-    };
-    document.body.appendChild(scriptVLibras);
+        scriptVLibras.onload = () => {
+            // Initialize the VLibras widget
+            // Ensure window.VLibras is available before using it
+            if (window.VLibras && typeof window.VLibras.Widget === 'function') {
+                new window.VLibras.Widget('https://vlibras.gov.br/app');
+            } else {
+                console.error('VLibras Widget constructor not found after script load.');
+            }
+
+            // Mouseover functionality for the button.
+            // This assumes the button is part of the content loaded by acessibilidade.html.
+            // If .load() replaces the content of #acessibilidade div, this button is new each time.
+            const btn = document.querySelector('.vw-access-button');
+            if (btn) {
+                // Check if listener already attached to avoid duplicates if button isn't re-rendered
+                if (!btn.hasAttribute('data-vlibras-mouseover-listener-attached')) {
+                    btn.addEventListener('mouseover', function () {
+                        // It seems the original intent was to trigger a click on mouseover.
+                        // This might be aggressive. Consider if this behavior is truly desired.
+                        // For now, replicating existing logic.
+                        this.click();
+                    });
+                    btn.setAttribute('data-vlibras-mouseover-listener-attached', 'true');
+                }
+            }
+        };
+
+        scriptVLibras.onerror = () => {
+            console.error('Failed to load the VLibras plugin script.');
+        };
+
+        document.body.appendChild(scriptVLibras);
+    } else {
+        // Optional: log that script was already loaded, for debugging
+        // console.log('VLibras plugin script already loaded or initiated.');
+    }
 </script>
-
