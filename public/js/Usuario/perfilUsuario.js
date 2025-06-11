@@ -190,7 +190,7 @@ const handleLogout = () => {
   localStorage.removeItem('userId');
   // localStorage.clear(); // Alternativa mais agressiva, se necessário
   alert('Você foi desconectado.');
-  window.location.href = 'login.html';
+  window.location.href = 'index.html'; // Changed redirect target
 };
 
 // const id = defineIdGeral(); // ID será obtido do token dentro de exibeDados
