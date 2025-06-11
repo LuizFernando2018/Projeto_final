@@ -47,7 +47,7 @@ const mostraDados = (usuario) => {
     </div>
     <div class="input-container">
       <label for="fone" class="formulario__campo">Telefone</label>
-      <input type="tel" data-type="telefone" class="formulario__input input" id="phone" placeholder="55 11 XXXXXXXXX" value="${usuario.telefone || ''}">
+      <input type="tel" data-type="telefone" class="formulario__input input" id="fone" placeholder="55 11 XXXXXXXXX" value="${usuario.telefone || ''}">
       <span class="input-mensagem-erro">Campo inválido</span>
     </div>
     <label for="cidade" class="formulario__campo">Cidade</label>
