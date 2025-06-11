@@ -52,7 +52,7 @@ const mostraDados = (usuario) => {
     <div class="two-factor-section">
       <h3>Autenticação de Dois Fatores (2FA)</h3>
       <p id="twoFactorStatusText">Status 2FA: Verificando...</p>
-      <button id="enableTwoFactorBtn" class="formulario__botao btn">Carregando...</button>
+      <button id="enableTwoFactorBtn" class="button">Carregando...</button>
       <div id="twoFactorQr" style="margin-top: 10px;"></div>
     </div>
   `;
