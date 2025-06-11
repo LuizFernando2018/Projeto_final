@@ -42,18 +42,12 @@ const mostraDados = (usuario) => {
     </figure-->
     <div class="input-container">
       <label for="nome" class="formulario__campo">Nome</label>
-      <input type="text" data-type="nome" class="formulario__input input" id="nome" placeholder="Insira seu nome completo" value="${usuario.nome || ''}" required>
-      <span class="input-mensagem-erro">Campo inválido</span>
+      <input type="text" data-type="nome" class="formulario__input input" id="nome" placeholder="Insira seu nome completo" value="${usuario.nome || ''}" readonly>
+      <!-- Removed error message span for Nome -->
     </div>
-    <div class="input-container">
-      <label for="fone" class="formulario__campo">Telefone</label>
-      <input type="tel" data-type="telefone" class="formulario__input input" id="fone" placeholder="55 11 XXXXXXXXX" value="${usuario.telefone || ''}">
-      <span class="input-mensagem-erro">Campo inválido</span>
-    </div>
-    <label for="cidade" class="formulario__campo">Cidade</label>
-    <input data-type="cidade" type="text" class="formulario__input input" id="cidade" placeholder="São Paulo" value="${usuario.cidade || ''}">
-    <label for="mensagem" class="formulario__campo">Sobre</label>
-    <textarea data-type="sobre" class="formulario__textarea" id="mensagem" rows="6" cols="50" placeholder="At vero eos et accusamus et iusto odio...">${usuario.sobre || ''}</textarea>
+    <!-- Removed Telefone field -->
+    <!-- Removed Cidade field -->
+    <!-- Removed Sobre field (textarea) -->
 
     <div class="two-factor-section">
       <h3>Autenticação de Dois Fatores (2FA)</h3>
