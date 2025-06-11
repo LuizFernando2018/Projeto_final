@@ -23,7 +23,7 @@ async function carregarAnimais() {
                                 <h2 class="animal__nome">${animal.nome}</h2>
                                 <p class="animal__descricao--texto">${animal.idade}</p>
                                 <p class="animal__descricao--texto">${animal.descricao}</p>
-                                <p class="animal__local">Rio de Janeiro (RJ)</p>
+                                <p class="animal__local">${animal.localizacao || 'Localização não informada'}</p> <!-- Changed this line -->
                                 <div class="animal__mensagem">
                                     <p class="animal__mensagem--texto">
                                         <button class="botao--falar-responsavel" data-animal-id="${animal.id}" style="background: rgba(0, 0, 0, 0); color:rgb(51, 51, 51); border: none; cursor: pointer;">Falar com responsável</button>

@@ -37,6 +37,9 @@
         <option value="pendente">Pendente</option>
       </select>
 
+      <label for="localizacao">Localização:</label>
+      <input type="text" id="localizacao">
+
       <button type="submit">Cadastrar Animal</button>
     </form>
   </section>
@@ -64,6 +67,9 @@
         <option value="pendente">Pendente</option>
       </select>
 
+      <label for="edit-localizacao">Localização:</label>
+      <input type="text" id="edit-localizacao">
+
       <button type="submit">Salvar Alterações</button>
       <button type="button" onclick="cancelarEdicao()">Cancelar</button>
     </form>
@@ -80,6 +86,7 @@
           <th>Idade</th>
           <th>Descrição</th>
           <th>Status</th>
+          <th>Localização</th> <!-- Added this header -->
           <th>Ações</th>
         </tr>
       </thead>
@@ -149,6 +156,7 @@
               <td>${animal.idade || '-'}</td>
               <td>${animal.descricao || '-'}</td>
               <td>${animal.status}</td>
+              <td>${animal.localizacao || '-'}</td> <!-- Added this cell -->
               <td>
                 <button class="edit" onclick="editarAnimal(${animal.id})">Editar</button>
                 <button class="delete" onclick="deletarAnimal(${animal.id})">Deletar</button>
@@ -172,7 +180,8 @@
           especie: document.getElementById('especie').value,
           idade: document.getElementById('idade').value,
           descricao: document.getElementById('descricao').value,
-          status: document.getElementById('status').value
+          status: document.getElementById('status').value,
+          localizacao: document.getElementById('localizacao').value // Added this line
         };
 
         try {
@@ -212,6 +221,7 @@
           document.getElementById('edit-idade').value = animal.idade || '';
           document.getElementById('edit-descricao').value = animal.descricao || '';
           document.getElementById('edit-status').value = animal.status;
+          document.getElementById('edit-localizacao').value = animal.localizacao || ''; // Added this line
 
           formEditar.style.display = 'block';
           formCadastrar.style.display = 'none';
@@ -230,7 +240,8 @@
           especie: document.getElementById('edit-especie').value,
           idade: document.getElementById('edit-idade').value,
           descricao: document.getElementById('edit-descricao').value,
-          status: document.getElementById('edit-status').value
+          status: document.getElementById('edit-status').value,
+          localizacao: document.getElementById('edit-localizacao').value // Added this line
         };
 
         try {

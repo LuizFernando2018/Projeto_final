@@ -430,15 +430,15 @@ app.get('/animais/admin', verifyToken, async (req, res) => {
 // Rota para cadastrar animal
 app.post('/animais', verifyToken, async (req, res) => {
   try {
-    const { nome, especie, idade, descricao, status } = req.body;
+    const { nome, especie, idade, descricao, status, localizacao } = req.body; // Added localizacao
 
     if (!nome || !especie) {
       return res.status(400).json({ error: 'Nome e espécie são obrigatórios' });
     }
 
     const [result] = await connection.execute(
-      'INSERT INTO Animais (nome, especie, idade, descricao, status, id_responsavel) VALUES (?, ?, ?, ?, ?, ?)',
-      [nome, especie, idade || null, descricao || null, status || 'disponivel', req.userId]
+      'INSERT INTO Animais (nome, especie, idade, descricao, status, id_responsavel, localizacao) VALUES (?, ?, ?, ?, ?, ?, ?)', // Added localizacao column
+      [nome, especie, idade || null, descricao || null, status || 'disponivel', req.userId, localizacao || null] // Added localizacao value
     );
 
     const animalCriado = {
@@ -448,7 +448,8 @@ app.post('/animais', verifyToken, async (req, res) => {
       idade,
       descricao,
       status: status || 'disponivel',
-      id_responsavel: req.userId
+      id_responsavel: req.userId,
+      localizacao: localizacao || null // Added localizacao to response
     };
 
     // Registrar a criação do animal na auditoria
@@ -480,7 +481,7 @@ app.get('/animais/:id', async (req, res) => {
 // Rota para atualizar animal
 app.put('/animais/:id', verifyToken, async (req, res) => {
   const id = req.params.id;
-  const { nome, especie, idade, descricao, status } = req.body;
+  const { nome, especie, idade, descricao, status, localizacao } = req.body; // Added localizacao
 
   try {
     const [rows] = await connection.execute('SELECT * FROM Animais WHERE id = ?', [id]);
@@ -490,8 +491,8 @@ app.put('/animais/:id', verifyToken, async (req, res) => {
 
     const animalAntigo = rows[0];
     const [result] = await connection.execute(
-      'UPDATE Animais SET nome = ?, especie = ?, idade = ?, descricao = ?, status = ? WHERE id = ?',
-      [nome || animalAntigo.nome, especie || animalAntigo.especie, idade || animalAntigo.idade, descricao || animalAntigo.descricao, status || animalAntigo.status, id]
+      'UPDATE Animais SET nome = ?, especie = ?, idade = ?, descricao = ?, status = ?, localizacao = ? WHERE id = ?', // Added localizacao column
+      [nome || animalAntigo.nome, especie || animalAntigo.especie, idade || animalAntigo.idade, descricao || animalAntigo.descricao, status || animalAntigo.status, localizacao || animalAntigo.localizacao, id] // Added localizacao value
     );
 
     if (result.affectedRows === 0) {
@@ -504,7 +505,8 @@ app.put('/animais/:id', verifyToken, async (req, res) => {
       especie: especie || animalAntigo.especie,
       idade: idade || animalAntigo.idade,
       descricao: descricao || animalAntigo.descricao,
-      status: status || animalAntigo.status
+      status: status || animalAntigo.status,
+      localizacao: localizacao || animalAntigo.localizacao // Added localizacao to response
     };
 
     // Registrar a atualização na auditoria
