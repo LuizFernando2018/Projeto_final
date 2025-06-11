@@ -13,8 +13,7 @@
 }
 
 .cabecalho__menu--item a:focus {
-    outline: 2px solid var(--azul);
-    outline-offset: 2px;
+    outline: none; /* Changed from 2px solid var(--azul) */
 }
 
 @media screen and (min-width: 0px) {
