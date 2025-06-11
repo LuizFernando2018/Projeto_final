@@ -72,4 +72,8 @@
 @import url(./animais/animal__mensagem.css);
 @import url(./animais/animal__mensagem--texto.css);
 
+/* Profile page specific layout adjustments */
+.conteudo__perfil {
+    padding-bottom: 50px; /* Provides space for the fixed footer (approx 30px height + some buffer) */
+}
 
