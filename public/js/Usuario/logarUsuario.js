@@ -2,6 +2,7 @@ import { validaCampo } from './validacao.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   // Bloco de verificação de token existente
+  /*
   const token = localStorage.getItem('token');
   if (token) {
     try {
@@ -30,6 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
       // Prossegue para mostrar a página de login
     }
   }
+  */
   // Fim do bloco de verificação
 
   // O restante do código original do DOMContentLoaded continua aqui...

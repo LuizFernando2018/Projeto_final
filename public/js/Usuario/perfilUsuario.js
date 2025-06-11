@@ -184,6 +184,15 @@ function updateTwoFactorUI(isTwoFactorEnabled, qrCodeDataUrl = null) {
   }
 }
 
+const handleLogout = () => {
+  console.log('Executando logout...');
+  localStorage.removeItem('token');
+  localStorage.removeItem('userId');
+  // localStorage.clear(); // Alternativa mais agressiva, se necessário
+  alert('Você foi desconectado.');
+  window.location.href = 'login.html';
+};
+
 // const id = defineIdGeral(); // ID será obtido do token dentro de exibeDados
 // const formulario = document.querySelector('[data-formPerfil]'); // Movido para dentro de exibeDados
 // console.log('Formulário encontrado:', formulario); // Removido ou movido
@@ -296,3 +305,19 @@ const exibeDados = async () => {
 
 $('#acessibilidade').load('../acessibilidade.html');
 exibeDados();
+
+const logoutButton = document.getElementById('logoutBtn');
+if (logoutButton) {
+  logoutButton.addEventListener('click', handleLogout);
+} else {
+  // Attempt to find it after a slight delay if not immediately available,
+  // though with module defer behavior, it should be.
+  document.addEventListener('DOMContentLoaded', () => {
+    const btn = document.getElementById('logoutBtn');
+    if (btn) {
+      btn.addEventListener('click', handleLogout);
+    } else {
+      console.error('Logout button not found even after DOMContentLoaded.');
+    }
+  });
+}
