@@ -8,14 +8,6 @@
     box-sizing: border-box;
 }
 
-.input#senha, .input#confirmaSenha {
-    background-image: url(../img/Olho.svg);
-    background-repeat: no-repeat;
-    background-position-x: right;
-    background-position-y: center;
-    background-origin: content-box;
-}
-
 .input-mensagem-erro {
     display: block;
     color: red;
@@ -33,3 +25,15 @@
     flex-direction: column;
     color: red;
 }
+
+/* Styles for toggle password visibility icon image */
+.toggle-password-visibility img {
+    width: 20px;
+    height: auto;
+    display: block;
+}
+/* The parent div with "position: relative" and the span with "position: absolute"
+   are currently handled with inline styles in the HTML.
+   The input fields also have inline "padding-right: 30px;".
+   These can be moved to CSS classes later if this pattern is widely adopted.
+*/

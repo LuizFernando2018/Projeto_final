@@ -48,16 +48,22 @@
                 </div>
                 <div class="input-container">
                     <label for="senha" class="formulario__loggedout--campo">Senha</label>
-                    <input type="password" data-type="senha" class="formulario__loggedout--input input" id="senha"
-                        pattern="[A-Za-z0-9!@#$%^&*]{8,12}"
-                        title="A senha deve ter 8-12 caracteres, incluindo letras maiúsculas, números e caracteres especiais."
-                        placeholder="Crie uma senha" required>
+                    <div style="position: relative; display: flex; align-items: center;">
+                        <input data-type="senha" type="password" class="formulario__loggedout--input input" id="senha" placeholder="Crie uma senha" required pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,12}$" title="Deve conter ao menos um número, uma letra maiúscula e minúscula, e entre 8 e 12 caracteres" style="padding-right: 30px;">
+                        <span class="toggle-password-visibility" data-target-input="senha" style="position: absolute; right: 10px; cursor: pointer;">
+                            <img src="assets/img/Olho.svg" alt="Mostrar/Ocultar Senha" style="width: 20px; height: auto;">
+                        </span>
+                    </div>
                     <span class="input-mensagem-erro"></span>
                 </div>
                 <div class="input-container">
                     <label for="confirmaSenha" class="formulario__loggedout--campo">Confirme sua senha</label>
-                    <input type="password" class="formulario__loggedout--input input" id="confirmaSenha"
-                        placeholder="Repita a senha" required>
+                    <div style="position: relative; display: flex; align-items: center;">
+                        <input data-type="confirmaSenha" type="password" class="formulario__loggedout--input input" id="confirmaSenha" placeholder="Confirme sua senha" required pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,12}$" title="As senhas devem ser idênticas" style="padding-right: 30px;">
+                        <span class="toggle-password-visibility" data-target-input="confirmaSenha" style="position: absolute; right: 10px; cursor: pointer;">
+                            <img src="assets/img/Olho.svg" alt="Mostrar/Ocultar Senha" style="width: 20px; height: auto;">
+                        </span>
+                    </div>
                     <span class="input-mensagem-erro"></span>
                 </div>
                 <button type="submit" value="Cadastrar" id="btnSubmit" class="formulario__loggedout--botao btn">Cadastrar</button>

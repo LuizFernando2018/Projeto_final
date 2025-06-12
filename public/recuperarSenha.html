@@ -63,12 +63,22 @@
                     </div>
                     <div class="input-container">
                         <label for="novaSenha" class="formulario__loggedout--campo">Nova Senha</label>
-                        <input type="password" data-type="senha" class="formulario__loggedout--input input" id="novaSenha" name="novaSenha" placeholder="Digite sua nova senha" required>
+                        <div style="position: relative; display: flex; align-items: center;">
+                            <input type="password" data-type="senha" class="formulario__loggedout--input input" id="novaSenha" name="novaSenha" placeholder="Digite sua nova senha" required style="padding-right: 30px;">
+                            <span class="toggle-password-visibility" data-target-input="novaSenha" style="position: absolute; right: 10px; cursor: pointer;">
+                                <img src="assets/img/Olho.svg" alt="Mostrar/Ocultar Senha" style="width: 20px; height: auto;">
+                            </span>
+                        </div>
                         <span class="input-mensagem-erro">Campo inválido</span>
                     </div>
                     <div class="input-container">
                         <label for="confirmaNovaSenha" class="formulario__loggedout--campo">Confirmar Nova Senha</label>
-                        <input type="password" data-type="senha" class="formulario__loggedout--input input" id="confirmaNovaSenha" name="confirmaNovaSenha" placeholder="Confirme sua nova senha" required>
+                        <div style="position: relative; display: flex; align-items: center;">
+                            <input type="password" data-type="senha" class="formulario__loggedout--input input" id="confirmaNovaSenha" name="confirmaNovaSenha" placeholder="Confirme sua nova senha" required style="padding-right: 30px;">
+                            <span class="toggle-password-visibility" data-target-input="confirmaNovaSenha" style="position: absolute; right: 10px; cursor: pointer;">
+                                <img src="assets/img/Olho.svg" alt="Mostrar/Ocultar Senha" style="width: 20px; height: auto;">
+                            </span>
+                        </div>
                         <span class="input-mensagem-erro">Campo inválido</span>
                     </div>
                     <button type="submit" id="btnRedefinirSenha" class="formulario__loggedout--botao btn">Redefinir Senha</button>

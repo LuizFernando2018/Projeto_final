@@ -44,6 +44,32 @@ document.addEventListener('DOMContentLoaded', () => {
     if(fase2Recuperacao) fase2Recuperacao.style.display = 'none';
     if(fase1Recuperacao) fase1Recuperacao.style.display = 'block';
 
+    const setupPasswordToggles = () => {
+        const toggleIcons = form.querySelectorAll('.toggle-password-visibility');
+
+        toggleIcons.forEach(icon => {
+            if (icon.getAttribute('data-listener-attached') === 'true') {
+                return;
+            }
+
+            const targetInputId = icon.getAttribute('data-target-input');
+            const passwordInput = form.querySelector(`#${targetInputId}`);
+
+            if (passwordInput) {
+                icon.addEventListener('click', () => {
+                    if (passwordInput.type === 'password') {
+                        passwordInput.type = 'text';
+                    } else {
+                        passwordInput.type = 'password';
+                    }
+                });
+                icon.setAttribute('data-listener-attached', 'true');
+            }
+        });
+    };
+
+    // Call it once on DOM load in case HTML structure changes
+    setupPasswordToggles();
 
     if (btnEnviarCodigo) {
         btnEnviarCodigo.addEventListener('click', async (e) => {
@@ -73,6 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                     if(fase1Recuperacao) fase1Recuperacao.style.display = 'none';
                     if(fase2Recuperacao) fase2Recuperacao.style.display = 'block';
+                    setupPasswordToggles(); // Call here
                     if(inputCodigo) inputCodigo.focus();
                 } else {
                     if (mensagemGeral) {

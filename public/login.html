@@ -48,10 +48,15 @@
                 <span class="input-mensagem-erro">Campo invalido</span>
              </div>
                 <div class="input-container">
-                <label for="senha" class="formulario__loggedout--campo">Senha</label>
-                <input type="password" data-type="senha" class="formulario__loggedout--input input" id="senha" pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,12}$" placeholder="Insira senha" required>
-                <span class="input-mensagem-erro">Campo invalido</span>
-             </div>
+                    <label for="senha" class="formulario__loggedout--campo">Senha</label>
+                    <div style="position: relative; display: flex; align-items: center;">
+                        <input type="password" data-type="senha" class="formulario__loggedout--input input" id="senha" pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,12}$" placeholder="Insira senha" required style="padding-right: 30px;"> <!-- Added padding-right -->
+                        <span class="toggle-password-visibility" data-target-input="senha" style="position: absolute; right: 10px; cursor: pointer;">
+                            <img src="assets/img/Olho.svg" alt="Mostrar/Ocultar Senha" style="width: 20px; height: auto;">
+                        </span>
+                    </div>
+                    <span class="input-mensagem-erro">Campo invalido</span>
+                 </div>
             
                 <a href="./recuperarSenha.html" class="login__senha--link">Esqueci minha senha</a>
                 <button type="submit" value="Enviar" id="btnSubmit" class="formulario__loggedout--botao btn">Enviar</button>

@@ -263,5 +263,20 @@ document.addEventListener('DOMContentLoaded', () => {
        // E que o botão de submit está no estado original (pode ser complexo se já clonado)
     }
   });
+
+  // Password visibility toggle logic
+  const toggleIcon = document.querySelector('.toggle-password-visibility[data-target-input="senha"]'); // More specific selector
+  if (toggleIcon) {
+    const passwordInput = document.getElementById('senha'); // Directly use 'senha' as it's known for this page
+    if (passwordInput) {
+      toggleIcon.addEventListener('click', () => {
+        if (passwordInput.type === 'password') {
+          passwordInput.type = 'text';
+        } else {
+          passwordInput.type = 'password';
+        }
+      });
+    }
+  }
 });
 $('#acessibilidade').load('../acessibilidade.html');

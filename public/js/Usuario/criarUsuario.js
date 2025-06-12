@@ -182,6 +182,26 @@ document.addEventListener('DOMContentLoaded', () => {
             alert(erro.message);
         }
     });
+
+    // Password visibility toggle logic for registration page
+    const toggleIcons = document.querySelectorAll('.toggle-password-visibility');
+
+    toggleIcons.forEach(icon => {
+        const targetInputId = icon.getAttribute('data-target-input');
+        const passwordInput = document.getElementById(targetInputId);
+
+        if (passwordInput) {
+            icon.addEventListener('click', () => {
+                if (passwordInput.type === 'password') {
+                    passwordInput.type = 'text';
+                    // Optionally, change icon appearance here
+                } else {
+                    passwordInput.type = 'password';
+                    // Optionally, change icon back
+                }
+            });
+        }
+    });
 });
 
 $('#acessibilidade').load('../acessibilidade.html');
