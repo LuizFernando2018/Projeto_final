@@ -1,23 +1,30 @@
 export function validaCampo(input) {
     console.log(`Validando campo: ${input.id}`);
-    const erroSpan = input.parentElement.querySelector('.input-mensagem-erro');
-    const container = input.parentElement;
+    const mainContainer = input.closest('.input-container'); // Get the main container
+
+    if (!mainContainer) {
+        console.error(`Erro: Elemento .input-container não encontrado para o input ${input.id}`);
+        return 'Erro interno de validação: .input-container não encontrado.';
+    }
+
+    const erroSpan = mainContainer.querySelector('.input-mensagem-erro'); // Find erroSpan within mainContainer
 
     if (!erroSpan) {
-        console.error(`Erro: Elemento .input-mensagem-erro não encontrado para o input ${input.id}`);
-        return 'Erro interno de validação';
+        console.error(`Erro: Elemento .input-mensagem-erro não encontrado dentro de .input-container para o input ${input.id}`);
+        // Not returning here, as the primary validation logic can still proceed for class manipulation on mainContainer
     }
 
     if (input.validity.valid) {
-        container.classList.remove('input-container--invalido');
-        container.classList.add('input-container--valido');
-        erroSpan.textContent = '';
+        mainContainer.classList.remove('input-container--invalido');
+        mainContainer.classList.add('input-container--valido');
+        if (erroSpan) erroSpan.textContent = ''; // Check if erroSpan was found
         return null;
     } else {
-        container.classList.remove('input-container--valido');
-        container.classList.add('input-container--invalido');
+        mainContainer.classList.remove('input-container--valido');
+        mainContainer.classList.add('input-container--invalido');
         const erro = getMensagemErro(input);
-        erroSpan.textContent = erro;
+        if (erroSpan) erroSpan.textContent = erro; // Check if erroSpan was found
+        else console.error(`erroSpan not found for input ${input.id} within its .input-container`);
         return erro;
     }
 }
@@ -61,24 +68,31 @@ function getMensagemErro(input) {
 }
 
 export function validaConfirmaSenha(senhaInput, confirmaSenhaInput) {
-    const erroSpan = confirmaSenhaInput.parentElement.querySelector('.input-mensagem-erro');
-    const container = confirmaSenhaInput.parentElement;
+    const mainContainer = confirmaSenhaInput.closest('.input-container'); // Get the main container
+
+    if (!mainContainer) {
+        console.error(`Erro: Elemento .input-container não encontrado para o input confirmaSenha`);
+        return 'Erro interno de validação: .input-container não encontrado.';
+    }
+
+    const erroSpan = mainContainer.querySelector('.input-mensagem-erro'); // Find erroSpan within mainContainer
 
     if (!erroSpan) {
-        console.error(`Erro: Elemento .input-mensagem-erro não encontrado para confirmaSenha`);
-        return 'Erro interno de validação';
+        console.error(`Erro: Elemento .input-mensagem-erro não encontrado dentro de .input-container para o input confirmaSenha`);
+        // Not returning, allow class manipulation on mainContainer
     }
 
     if (senhaInput.value === confirmaSenhaInput.value) {
-        container.classList.remove('input-container--invalido');
-        container.classList.add('input-container--valido');
-        erroSpan.textContent = '';
+        mainContainer.classList.remove('input-container--invalido');
+        mainContainer.classList.add('input-container--valido');
+        if (erroSpan) erroSpan.textContent = ''; // Check if erroSpan was found
         return null;
     } else {
-        container.classList.remove('input-container--valido');
-        container.classList.add('input-container--invalido');
+        mainContainer.classList.remove('input-container--valido');
+        mainContainer.classList.add('input-container--invalido');
         const erro = 'As senhas não coincidem. Tente novamente.';
-        erroSpan.textContent = erro;
+        if (erroSpan) erroSpan.textContent = erro; // Check if erroSpan was found
+        else console.error(`erroSpan not found for input confirmaSenha within its .input-container`);
         return erro;
     }
 }
