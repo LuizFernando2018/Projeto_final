@@ -17,7 +17,7 @@ async function carregarAnimais() {
                 <div class="lista__item">
                     <div class="lista__item--container">        
                         <div class="item__texto">
-                        <article class="animal" style="flex: 1 1 calc(33.33% - 40px); box-sizing: border-box; max-width: 350px; border-radius: 10px; margin-bottom: -25px; box-shadow: 5px 5px 0px rgba(0, 0, 0, 0.25);">
+                        <article class="animal" style="flex: 1 1 calc(33.33% - 40px); box-sizing: border-box; max-width: 400px; border-radius: 10px; margin-bottom: -25px; box-shadow: 5px 5px 0px rgba(0, 0, 0, 0.25);">
                             <img src="${animal.imagem_url || './assets/img/Bar.png'}" alt="Foto de ${animal.nome || 'um animal'}" class="animal__imagem">
                             <div class="animal__descricao">
                                 <h2 class="animal__nome">${animal.nome}</h2>
