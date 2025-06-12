@@ -40,6 +40,9 @@
       <label for="localizacao">Localização:</label>
       <input type="text" id="localizacao">
 
+      <label for="animalImage">Imagem do Animal:</label>
+      <input type="file" id="animalImage" name="animalImage" accept="image/*">
+
       <button type="submit">Cadastrar Animal</button>
     </form>
   </section>
@@ -69,6 +72,14 @@
 
       <label for="edit-localizacao">Localização:</label>
       <input type="text" id="edit-localizacao">
+
+      <div>
+            <label>Imagem Atual:</label>
+            <img id="currentAnimalImagePreview" src="#" alt="Imagem atual do animal" style="max-width: 100px; max-height: 100px; display: none;">
+            <p id="noCurrentImageText" style="display: none;">Nenhuma imagem cadastrada.</p>
+      </div>
+      <label for="editAnimalImage">Nova Imagem (opcional):</label>
+      <input type="file" id="editAnimalImage" name="animalImage" accept="image/*">
 
       <button type="submit">Salvar Alterações</button>
       <button type="button" onclick="cancelarEdicao()">Cancelar</button>
@@ -175,26 +186,31 @@
       formCadastrar.addEventListener('submit', async (e) => {
         e.preventDefault();
 
-        const animal = {
-          nome: document.getElementById('nome').value,
-          especie: document.getElementById('especie').value,
-          idade: document.getElementById('idade').value,
-          descricao: document.getElementById('descricao').value,
-          status: document.getElementById('status').value,
-          localizacao: document.getElementById('localizacao').value // Added this line
-        };
+        const formData = new FormData();
+        formData.append('nome', document.getElementById('nome').value);
+        formData.append('especie', document.getElementById('especie').value);
+        formData.append('idade', document.getElementById('idade').value);
+        formData.append('descricao', document.getElementById('descricao').value);
+        formData.append('status', document.getElementById('status').value);
+        formData.append('localizacao', document.getElementById('localizacao').value);
+
+        const imageInput = document.getElementById('animalImage');
+        if (imageInput.files[0]) {
+          formData.append('animalImage', imageInput.files[0]);
+        }
 
         try {
           const response = await fetch('http://localhost:3000/animais', {
             method: 'POST',
             headers: {
-              'Content-Type': 'application/json',
+              // 'Content-Type': 'application/json' IS REMOVED for FormData + file upload
               'Authorization': `Bearer ${token}`
             },
-            body: JSON.stringify(animal)
+            body: formData // Send FormData object
           });
           if (!response.ok) {
-            throw new Error(`Erro: ${response.status} - ${response.statusText}`);
+            const errorData = await response.json().catch(() => ({ error: response.statusText })); // Try to parse error
+            throw new Error(errorData.error || `Erro HTTP: ${response.status}`);
           }
           const result = await response.json();
           mensagemDiv.innerHTML = `<p style="color: green;">Animal cadastrado com sucesso! ID: ${result.id}</p>`;
@@ -221,7 +237,19 @@
           document.getElementById('edit-idade').value = animal.idade || '';
           document.getElementById('edit-descricao').value = animal.descricao || '';
           document.getElementById('edit-status').value = animal.status;
-          document.getElementById('edit-localizacao').value = animal.localizacao || ''; // Added this line
+          document.getElementById('edit-localizacao').value = animal.localizacao || '';
+
+          const currentImagePreview = document.getElementById('currentAnimalImagePreview');
+          const noCurrentImageText = document.getElementById('noCurrentImageText');
+          if (animal.imagem_url) {
+            currentImagePreview.src = animal.imagem_url;
+            currentImagePreview.style.display = 'block';
+            noCurrentImageText.style.display = 'none';
+          } else {
+            currentImagePreview.style.display = 'none';
+            noCurrentImageText.style.display = 'block';
+          }
+          document.getElementById('editAnimalImage').value = ''; // Clear file input
 
           formEditar.style.display = 'block';
           formCadastrar.style.display = 'none';
@@ -235,26 +263,31 @@
         e.preventDefault();
 
         const id = document.getElementById('edit-id').value;
-        const animal = {
-          nome: document.getElementById('edit-nome').value,
-          especie: document.getElementById('edit-especie').value,
-          idade: document.getElementById('edit-idade').value,
-          descricao: document.getElementById('edit-descricao').value,
-          status: document.getElementById('edit-status').value,
-          localizacao: document.getElementById('edit-localizacao').value // Added this line
-        };
+        const formData = new FormData();
+        formData.append('nome', document.getElementById('edit-nome').value);
+        formData.append('especie', document.getElementById('edit-especie').value);
+        formData.append('idade', document.getElementById('edit-idade').value);
+        formData.append('descricao', document.getElementById('edit-descricao').value);
+        formData.append('status', document.getElementById('edit-status').value);
+        formData.append('localizacao', document.getElementById('edit-localizacao').value);
+
+        const editImageInput = document.getElementById('editAnimalImage');
+        if (editImageInput.files[0]) {
+          formData.append('animalImage', editImageInput.files[0]);
+        }
 
         try {
           const response = await fetch(`http://localhost:3000/animais/${id}`, {
             method: 'PUT',
             headers: {
-              'Content-Type': 'application/json',
+              // 'Content-Type': 'application/json' IS REMOVED for FormData
               'Authorization': `Bearer ${token}`
             },
-            body: JSON.stringify(animal)
+            body: formData
           });
           if (!response.ok) {
-            throw new Error(`Erro: ${response.status} - ${response.statusText}`);
+            const errorData = await response.json().catch(() => ({ error: response.statusText })); // Try to parse error
+            throw new Error(errorData.error || `Erro HTTP: ${response.status}`);
           }
           const result = await response.json();
           mensagemDiv.innerHTML = `<p style="color: green;">Animal atualizado com sucesso!</p>`;

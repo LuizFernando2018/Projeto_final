@@ -14,6 +14,8 @@ import nodemailer from 'nodemailer';
 import rateLimit from 'express-rate-limit';
 import speakeasy from 'speakeasy';
 import qrcode from 'qrcode';
+import multer from 'multer';
+import fs from 'fs';
 
 dotenv.config();
 
@@ -44,6 +46,33 @@ if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+const uploadsDir = path.join(__dirname, 'public/uploads/animals');
+if (!fs.existsSync(uploadsDir)){
+    fs.mkdirSync(uploadsDir, { recursive: true });
+}
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, uploadsDir);
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    const extension = path.extname(file.originalname);
+    const safeOriginalName = file.originalname.replace(/[^a-zA-Z0-9_.-]/g, '_').replace(extension, '');
+    cb(null, safeOriginalName.substring(0,50) + '-' + uniqueSuffix + extension);
+  }
+});
+
+const fileFilter = (req, file, cb) => {
+  if (file.mimetype.startsWith('image/')) {
+    cb(null, true);
+  } else {
+    cb(new Error('Não é um arquivo de imagem! Por favor, envie apenas imagens.'), false);
+  }
+};
+
+const upload = multer({ storage: storage, fileFilter: fileFilter, limits: { fileSize: 5 * 1024 * 1024 } }); // 5MB limit
 
 const app = express();
 
@@ -428,36 +457,51 @@ app.get('/animais/admin', verifyToken, async (req, res) => {
 });
 
 // Rota para cadastrar animal
-app.post('/animais', verifyToken, async (req, res) => {
+app.post('/animais', verifyToken, upload.single('animalImage'), async (req, res) => {
   try {
-    const { nome, especie, idade, descricao, status, localizacao } = req.body; // Added localizacao
+    const { nome, especie, idade, descricao, status, localizacao } = req.body;
+    let imagem_url = null;
+
+    if (req.file) {
+      imagem_url = '/uploads/animals/' + req.file.filename;
+    }
 
     if (!nome || !especie) {
+      if (req.file) {
+        fs.unlinkSync(req.file.path);
+      }
       return res.status(400).json({ error: 'Nome e espécie são obrigatórios' });
     }
 
     const [result] = await connection.execute(
-      'INSERT INTO Animais (nome, especie, idade, descricao, status, id_responsavel, localizacao) VALUES (?, ?, ?, ?, ?, ?, ?)', // Added localizacao column
-      [nome, especie, idade || null, descricao || null, status || 'disponivel', req.userId, localizacao || null] // Added localizacao value
+      'INSERT INTO Animais (nome, especie, idade, descricao, status, id_responsavel, localizacao, imagem_url) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+      [nome, especie, idade || null, descricao || null, status || 'disponivel', req.userId, localizacao || null, imagem_url]
     );
 
     const animalCriado = {
       id: result.insertId,
       nome,
       especie,
-      idade,
-      descricao,
+      idade: idade || null,
+      descricao: descricao || null,
       status: status || 'disponivel',
       id_responsavel: req.userId,
-      localizacao: localizacao || null // Added localizacao to response
+      localizacao: localizacao || null,
+      imagem_url: imagem_url
     };
-
-    // Registrar a criação do animal na auditoria
     await logAudit(req.userId, 'create_animal', animalCriado);
-
     res.status(201).json(animalCriado);
   } catch (err) {
     console.error('Erro ao cadastrar animal:', err);
+    // if (req.file && err.code !== 'LIMIT_FILE_SIZE' && !err.message.includes('Nome e espécie são obrigatórios')) {
+        // fs.unlinkSync(req.file.path);
+    // } // Commented out to avoid deleting files on generic DB errors for now
+    if (err.code === 'LIMIT_FILE_SIZE') {
+        return res.status(400).json({ error: 'Arquivo de imagem muito grande. Limite de 5MB.'});
+    }
+    if (err.message && err.message.startsWith('Não é um arquivo de imagem!')) { // Check err.message exists
+        return res.status(400).json({ error: err.message });
+    }
     res.status(500).json({ error: 'Erro ao cadastrar animal' });
   }
 });
@@ -479,23 +523,51 @@ app.get('/animais/:id', async (req, res) => {
 });
 
 // Rota para atualizar animal
-app.put('/animais/:id', verifyToken, async (req, res) => {
+app.put('/animais/:id', verifyToken, upload.single('animalImage'), async (req, res) => {
   const id = req.params.id;
-  const { nome, especie, idade, descricao, status, localizacao } = req.body; // Added localizacao
+  const { nome, especie, idade, descricao, status, localizacao } = req.body;
+  let new_imagem_url;
 
   try {
     const [rows] = await connection.execute('SELECT * FROM Animais WHERE id = ?', [id]);
     if (rows.length === 0) {
+      if (req.file) fs.unlinkSync(req.file.path);
       return res.status(404).json({ error: 'Animal não encontrado' });
     }
-
     const animalAntigo = rows[0];
+    new_imagem_url = animalAntigo.imagem_url;
+
+    if (req.file) {
+      new_imagem_url = '/uploads/animals/' + req.file.filename;
+      if (animalAntigo.imagem_url && animalAntigo.imagem_url !== new_imagem_url) {
+        const oldImagePath = path.join(__dirname, 'public', animalAntigo.imagem_url);
+        if (fs.existsSync(oldImagePath)) {
+          try {
+            fs.unlinkSync(oldImagePath);
+            console.log('Imagem antiga deletada:', oldImagePath);
+          } catch (unlinkErr) {
+            console.error('Erro ao deletar imagem antiga:', unlinkErr);
+          }
+        }
+      }
+    }
+
     const [result] = await connection.execute(
-      'UPDATE Animais SET nome = ?, especie = ?, idade = ?, descricao = ?, status = ?, localizacao = ? WHERE id = ?', // Added localizacao column
-      [nome || animalAntigo.nome, especie || animalAntigo.especie, idade || animalAntigo.idade, descricao || animalAntigo.descricao, status || animalAntigo.status, localizacao || animalAntigo.localizacao, id] // Added localizacao value
+      'UPDATE Animais SET nome = ?, especie = ?, idade = ?, descricao = ?, status = ?, localizacao = ?, imagem_url = ? WHERE id = ?',
+      [
+        nome || animalAntigo.nome,
+        especie || animalAntigo.especie,
+        idade || animalAntigo.idade,
+        descricao || animalAntigo.descricao,
+        status || animalAntigo.status,
+        localizacao !== undefined ? localizacao : animalAntigo.localizacao,
+        new_imagem_url,
+        id
+      ]
     );
 
     if (result.affectedRows === 0) {
+      if (req.file) fs.unlinkSync(req.file.path);
       return res.status(500).json({ error: 'Erro ao atualizar animal' });
     }
 
@@ -506,19 +578,22 @@ app.put('/animais/:id', verifyToken, async (req, res) => {
       idade: idade || animalAntigo.idade,
       descricao: descricao || animalAntigo.descricao,
       status: status || animalAntigo.status,
-      localizacao: localizacao || animalAntigo.localizacao // Added localizacao to response
+      localizacao: localizacao !== undefined ? localizacao : animalAntigo.localizacao,
+      imagem_url: new_imagem_url
     };
-
-    // Registrar a atualização na auditoria
-    await logAudit(req.userId, 'update_animal', {
-      animalId: id,
-      before: animalAntigo,
-      after: animalAtualizado
-    });
-
+    await logAudit(req.userId, 'update_animal', { animalId: id, before: animalAntigo, after: animalAtualizado });
     res.status(200).json(animalAtualizado);
   } catch (err) {
     console.error('Erro ao atualizar animal:', err);
+    // if (req.file && err.code !== 'LIMIT_FILE_SIZE' && !err.message.includes('Animal não encontrado')) {
+        // fs.unlinkSync(req.file.path);
+    // } // Commented out to avoid deleting files on generic DB errors for now
+    if (err.code === 'LIMIT_FILE_SIZE') {
+        return res.status(400).json({ error: 'Arquivo de imagem muito grande. Limite de 5MB.'});
+    }
+    if (err.message && err.message.startsWith('Não é um arquivo de imagem!')) { // Check err.message exists
+        return res.status(400).json({ error: err.message });
+    }
     res.status(500).json({ error: 'Erro ao atualizar animal' });
   }
 });
