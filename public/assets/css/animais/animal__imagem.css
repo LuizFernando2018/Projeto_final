@@ -1,5 +1,7 @@
 .animal__imagem {
-    text-align: center;
-    width: 148px;
-    grid-area: imagem;
+    width: 100%; /* Fill the width of its grid area */
+    height: 180px; /* Set a fixed height for consistent card image area size */
+    object-fit: cover; /* Cover the area, cropping if necessary */
+    display: block; /* Ensure block behavior for width/height */
+    grid-area: imagem; /* Retain its role in the parent grid layout */
 }
