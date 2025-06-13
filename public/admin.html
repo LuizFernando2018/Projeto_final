@@ -11,7 +11,7 @@
 <body>
    
         <h1>Gerenciamento de Animais (Admin)</h1>
-        <button id="adminLogoutBtn" style="margin-bottom: 15px; padding: 8px 15px;">Logout</button>
+        <button id="adminLogoutBtn">Logout</button>
     
     <div id="mensagem"></div>
 
@@ -41,7 +41,11 @@
       <input type="text" id="localizacao">
 
       <label for="animalImage">Imagem do Animal:</label>
-      <input type="file" id="animalImage" name="animalImage" accept="image/*">
+      <div>
+            <input type="file" id="animalImage" name="animalImage" accept="image/*" style="display: none;">
+            <button type="button" class="custom-file-upload-btn" data-target-file-input="animalImage">Selecionar Imagem</button>
+            <span id="fileNameAnimalImage" class="file-name-display">Nenhum arquivo selecionado</span>
+      </div>
 
       <button type="submit">Cadastrar Animal</button>
     </form>
@@ -79,7 +83,11 @@
             <p id="noCurrentImageText" style="display: none;">Nenhuma imagem cadastrada.</p>
       </div>
       <label for="editAnimalImage">Nova Imagem (opcional):</label>
-      <input type="file" id="editAnimalImage" name="animalImage" accept="image/*">
+      <div>
+            <input type="file" id="editAnimalImage" name="animalImage" accept="image/*" style="display: none;">
+            <button type="button" class="custom-file-upload-btn" data-target-file-input="editAnimalImage">Selecionar Imagem</button>
+            <span id="fileNameEditAnimalImage" class="file-name-display">Nenhum arquivo selecionado</span>
+      </div>
 
       <button type="submit">Salvar Alterações</button>
       <button type="button" onclick="cancelarEdicao()">Cancelar</button>
@@ -134,6 +142,33 @@
       }
 
       inicializarPagina(); // Call to initialize page content
+    }
+
+    function setupCustomFileInputs() {
+        document.querySelectorAll('.custom-file-upload-btn').forEach(button => {
+            const targetInputId = button.getAttribute('data-target-file-input');
+            const fileInput = document.getElementById(targetInputId);
+            const fileNameDisplayId = 'fileName' + targetInputId.charAt(0).toUpperCase() + targetInputId.slice(1); // e.g., fileNameAnimalImage
+            const fileNameDisplay = document.getElementById(fileNameDisplayId);
+
+            if (fileInput) {
+                button.addEventListener('click', () => {
+                    fileInput.click(); // Trigger click on the hidden file input
+                });
+
+                fileInput.addEventListener('change', () => {
+                    if (fileInput.files.length > 0) {
+                        if (fileNameDisplay) {
+                            fileNameDisplay.textContent = fileInput.files[0].name;
+                        }
+                    } else {
+                        if (fileNameDisplay) {
+                            fileNameDisplay.textContent = 'Nenhum arquivo selecionado';
+                        }
+                    }
+                });
+            }
+        });
     }
 
     function inicializarPagina() {
@@ -328,6 +363,7 @@
           mensagemDiv.innerHTML = `<p style="color: red;">Erro ao deletar animal: ${err.message}</p>`;
         }
       };
+      setupCustomFileInputs(); // Call here
     }
   </script>
 </body>
