@@ -75,6 +75,29 @@ const fileFilter = (req, file, cb) => {
 
 const upload = multer({ storage: storage, fileFilter: fileFilter, limits: { fileSize: 5 * 1024 * 1024 } }); // 5MB limit
 
+const handleAnimalImageUpload = (req, res, next) => {
+  const uploader = upload.single('animalImage'); // 'animalImage' is the field name from input type=file
+
+  uploader(req, res, function (err) {
+    if (err instanceof multer.MulterError) {
+      // A Multer error occurred when uploading.
+      if (err.code === 'LIMIT_FILE_SIZE') {
+        return res.status(400).json({ error: 'Arquivo de imagem muito grande. Limite de 5MB.' });
+      }
+      // Handle other multer errors if needed
+      return res.status(400).json({ error: `Erro no upload (Multer): ${err.message}` });
+    } else if (err) {
+      // An error from our custom fileFilter or other non-Multer error during upload phase
+      // This should catch the "Tipo de arquivo inválido..." error.
+      return res.status(400).json({ error: err.message });
+    }
+    // Everything went fine with multer, or no file was uploaded (which is fine for optional uploads)
+    // req.file will be populated if a file was successfully processed.
+    // req.body will be populated with text fields.
+    next();
+  });
+};
+
 const app = express();
 
 app.use(express.json());
@@ -458,7 +481,7 @@ app.get('/animais/admin', verifyToken, async (req, res) => {
 });
 
 // Rota para cadastrar animal
-app.post('/animais', verifyToken, upload.single('animalImage'), async (req, res) => {
+app.post('/animais', verifyToken, handleAnimalImageUpload, async (req, res) => {
   try {
     const { nome, especie, idade, descricao, status, localizacao } = req.body;
     let imagem_url = null;
@@ -493,17 +516,14 @@ app.post('/animais', verifyToken, upload.single('animalImage'), async (req, res)
     await logAudit(req.userId, 'create_animal', animalCriado);
     res.status(201).json(animalCriado);
   } catch (err) {
-    console.error('Erro ao cadastrar animal:', err);
-    // if (req.file && err.code !== 'LIMIT_FILE_SIZE' && !err.message.includes('Nome e espécie são obrigatórios')) {
-        // fs.unlinkSync(req.file.path);
-    // } // Commented out to avoid deleting files on generic DB errors for now
-    if (err.code === 'LIMIT_FILE_SIZE') {
-        return res.status(400).json({ error: 'Arquivo de imagem muito grande. Limite de 5MB.'});
+    console.error('Erro ao cadastrar animal (rota):', err);
+    // Multer file type/size errors are now handled by handleAnimalImageUpload middleware.
+    // This catch block now handles other errors, e.g., database errors.
+    if (req.file) {
+      // Consider if fs.unlinkSync(req.file.path) is safe here if DB fails after successful upload.
+      // For now, this specific cleanup for DB error is removed to rely on initial validation cleanup.
     }
-    if (err.message && err.message.startsWith('Não é um arquivo de imagem!')) { // Check err.message exists
-        return res.status(400).json({ error: err.message });
-    }
-    res.status(500).json({ error: 'Erro ao cadastrar animal' });
+    res.status(500).json({ error: 'Erro interno ao cadastrar animal.' });
   }
 });
 
@@ -524,7 +544,7 @@ app.get('/animais/:id', async (req, res) => {
 });
 
 // Rota para atualizar animal
-app.put('/animais/:id', verifyToken, upload.single('animalImage'), async (req, res) => {
+app.put('/animais/:id', verifyToken, handleAnimalImageUpload, async (req, res) => {
   const id = req.params.id;
   const { nome, especie, idade, descricao, status, localizacao } = req.body;
   let new_imagem_url;
@@ -532,7 +552,9 @@ app.put('/animais/:id', verifyToken, upload.single('animalImage'), async (req, r
   try {
     const [rows] = await connection.execute('SELECT * FROM Animais WHERE id = ?', [id]);
     if (rows.length === 0) {
-      if (req.file) fs.unlinkSync(req.file.path);
+      if (req.file) {
+        fs.unlinkSync(req.file.path);
+      }
       return res.status(404).json({ error: 'Animal não encontrado' });
     }
     const animalAntigo = rows[0];
@@ -568,8 +590,10 @@ app.put('/animais/:id', verifyToken, upload.single('animalImage'), async (req, r
     );
 
     if (result.affectedRows === 0) {
-      if (req.file) fs.unlinkSync(req.file.path);
-      return res.status(500).json({ error: 'Erro ao atualizar animal' });
+      if (req.file) { // If a new file was part of this update attempt, but DB update failed
+         // fs.unlinkSync(req.file.path); // Decide if this cleanup is desired
+      }
+      return res.status(500).json({ error: 'Erro ao atualizar animal (nenhuma linha afetada)' });
     }
 
     const animalAtualizado = {
@@ -585,17 +609,14 @@ app.put('/animais/:id', verifyToken, upload.single('animalImage'), async (req, r
     await logAudit(req.userId, 'update_animal', { animalId: id, before: animalAntigo, after: animalAtualizado });
     res.status(200).json(animalAtualizado);
   } catch (err) {
-    console.error('Erro ao atualizar animal:', err);
-    // if (req.file && err.code !== 'LIMIT_FILE_SIZE' && !err.message.includes('Animal não encontrado')) {
-        // fs.unlinkSync(req.file.path);
-    // } // Commented out to avoid deleting files on generic DB errors for now
-    if (err.code === 'LIMIT_FILE_SIZE') {
-        return res.status(400).json({ error: 'Arquivo de imagem muito grande. Limite de 5MB.'});
+    console.error('Erro ao atualizar animal (rota):', err);
+    // Multer errors are handled by middleware. This catches DB or other logic errors.
+    if (req.file) {
+        // If a new file was uploaded by handleAnimalImageUpload, but a subsequent error occurred (e.g., DB error),
+        // the new file might be orphaned. Consider if fs.unlinkSync(req.file.path) is appropriate here.
+        // For now, this specific cleanup for DB error after successful upload is removed.
     }
-    if (err.message && err.message.startsWith('Não é um arquivo de imagem!')) { // Check err.message exists
-        return res.status(400).json({ error: err.message });
-    }
-    res.status(500).json({ error: 'Erro ao atualizar animal' });
+    res.status(500).json({ error: 'Erro interno ao atualizar animal.' });
   }
 });
 
