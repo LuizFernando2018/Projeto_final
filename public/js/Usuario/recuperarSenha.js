@@ -242,4 +242,10 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
+    $('#acessibilidade').load('../acessibilidade.html', function(response, status, xhr) {
+        if (status === "error") {
+            console.error("Erro ao carregar acessibilidade.html em recuperarSenha: " + xhr.status + " " + xhr.statusText);
+        }
+    });
 });

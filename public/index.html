@@ -54,6 +54,20 @@
     <footer class="rodape">
         <p>2025 - Desenvolvido por acadêmicos do curso de Análise e Desenvolvimento de Sistemas.</p>
     </footer>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+      $(document).ready(function() {
+        if ($('#acessibilidade').length) {
+          $('#acessibilidade').load('./acessibilidade.html', function(response, status, xhr) {
+            if (status === "error") {
+              console.error("Erro ao carregar acessibilidade.html: " + xhr.status + " " + xhr.statusText);
+            }
+          });
+        } else {
+          console.warn("#acessibilidade div not found on index.html for VLibras.");
+        }
+      });
+    </script>
     <script src="https://accessibility-widget.pages.dev/script.js" defer></script>
 </body>
 </html>
